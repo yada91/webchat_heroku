@@ -1,0 +1,363 @@
+<html>
+    <body>
+    <div>
+        <div>
+            <p>How can we help you?</p>
+        </div>
+        <div>
+
+            <div style="margin-left: 30px;">
+                <div>
+                    Customer Type:
+                    <select id="customerType">
+                        <option value="0121m000000cckyAAA">Prospect</option>
+                        <option value="0121m000000ccl3AAA">Member</option>
+                    </select>
+                </div>
+                KDCE_ExternalId__c: <input type='text' id="KDCE_ExternalId__c" value=""/><br/>
+                Name: <input type='text' id="lastName" value=""/><br/>
+                Birthdate: <input type='date' id="birthdate" value="1991-07-18"/><br/>
+                Phone : <input type='text' id="phone" value=""/><br/>
+                Email : <input type='text' id="email" value=""/><br/>
+                Subject : <input type='text' id="subject" value=""/><br/>
+                <div>
+                    Case Type:
+                    <select id="caseType">
+                        <option value="0121m000000c3yOAAQ">1-Inquiry/Critical Inquiry</option>
+                        <option value="0121m000000c3yLAAQ">2-Orders/Order On Behalf</option>
+                        <option value="0121m000000c3yNAAQ">3-Holder/Charger/Accessory</option>
+                        <option value="0121m000000c3xoAAA">6-Adverse Event</option>
+                        <option value="0121m000000c3yQAAQ">7-HeatStick</option>
+                        <option value="0121m000000c3yRAAQ">8-Program Support</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="startChat">Start Chat</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+    <script type='text/javascript'>
+        var initESW = function (gslbBaseURL) {
+            embedded_svc.settings.displayHelpButton = false; //Or false
+            embedded_svc.settings.language = 'ko'; //For example, enter 'en' or 'en-US'
+
+            //embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+            //embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
+
+            //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+            //embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+
+            // Settings for Chat
+            //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+            // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+            // Returns a valid button ID.
+            //};
+            //embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+            //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+            //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+
+
+            embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+            embedded_svc.settings.entryFeature = 'LiveAgent';
+
+            embedded_svc.init(
+                'https://pmi-e--qa.my.salesforce.com',
+                'https://qa-pmk.cs117.force.com/survey',
+                gslbBaseURL,
+                '00D1m0000008mvR',
+                'Chat_Agents',
+                {
+                    baseLiveAgentContentURL: 'https://c.la2-c1cs-ukb.salesforceliveagent.com/content',
+                    deploymentId: '5721m0000008OP1',
+                    buttonId: '5731m0000008OO5',
+                    baseLiveAgentURL: 'https://d.la2-c1cs-ukb.salesforceliveagent.com/chat',
+                    eswLiveAgentDevName: 'Chat_Agents',
+                    isOfflineSupportEnabled: false
+                }
+            );
+
+        };
+        if (!window.embedded_svc) {
+            var s = document.createElement('script');
+            s.setAttribute('src', 'https://pmi-e--qa.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+            s.onload = function () {
+                initESW(null);
+            };
+            document.body.appendChild(s);
+
+        } else {
+            initESW('https://service.force.com');
+
+        }
+    </script>
+
+    <script type='text/javascript'>
+        (function () {
+            document.getElementById('startChat').onclick = function () {
+                let extraPrechatFormDetails = [
+                    {
+                        "label": "KDCE_ExternalId__c",
+                        "value": document.getElementById('KDCE_ExternalId__c').value,
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "First Name",
+                        "value": document.getElementById('lastName').value,
+                        "displayToAgent": true
+                    },
+                    {
+                        "label": "Last Name",
+                        "value": document.getElementById('lastName').value,
+                        "displayToAgent": true
+                    },
+                    {
+                        "label": "Email",
+                        "value": document.getElementById('email').value,
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "Phone",
+                        "value": document.getElementById('phone').value,
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "Birthdate",
+                        "value": document.getElementById('birthdate').value,
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "customerType",
+                        "value": document.getElementById('customerType').value,
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "Subject",
+                        "value": document.getElementById('subject').value,
+                        "displayToAgent": true
+                    },
+                    {
+                        "label": "Status",
+                        "value": "New",
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "Case Origin",
+                        "value": "Chat",
+                        "displayToAgent": true
+                    }, {
+                        "label": "CCR_ContactType__c",
+                        "value": "Chat",
+                        "displayToAgent": false
+                    },
+                    {
+                        "label": "CaseType",
+                        "value": document.getElementById('caseType').value,
+                        "displayToAgent": false
+                    },
+                ];
+                let extraPrechatInfo;
+                if (document.getElementById('KDCE_ExternalId__c').value !== null
+                    && document.getElementById('KDCE_ExternalId__c').value !== '') {
+                    extraPrechatInfo =
+                        [
+                            {
+                                "entityName": "Contact",
+                                "showOnCreate": false,
+                                "linkToEntityName": "Case",
+                                "linkToEntityField": "ContactId",
+                                "saveToTranscript": "Contact",
+                                "entityFieldMaps": [{
+                                    "isExactMatch": false,
+                                    "fieldName": "FirstName",
+                                    "doCreate": false,
+                                    "doFind": false,
+                                    "label": "First Name"
+                                }, {
+                                    "isExactMatch": true,
+                                    "fieldName": "KDCE_ExternalId__c",
+                                    "doCreate": false,
+                                    "doFind": true,
+                                    "label": "KDCE_ExternalId__c"
+                                },
+                                ]
+                            },
+                            {
+                                "entityName": "Case",
+                                "showOnCreate": true,
+                                "saveToTranscript": "Case",
+                                "entityFieldMaps": [
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "CCR_LastName__c",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Last Name"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "CCR_Email__c",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Email"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Subject",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Subject"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Subject",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Subject"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Status",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Status"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Origin",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Case Origin"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "CCR_ContactType__c",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "CCR_ContactType__c"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "RecordTypeId",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "CaseType"
+                                    },
+                                ]
+                            }
+                        ];
+                } else {
+                    extraPrechatInfo =
+                        [
+                            {
+                                "entityName": "Contact",
+                                "showOnCreate": false,
+                                "entityFieldMaps": [{
+                                    "isExactMatch": false,
+                                    "fieldName": "FirstName",
+                                    "doCreate": false,
+                                    "doFind": false,
+                                    "label": "First Name"
+                                }
+                                ]
+                            },
+                            {
+                                "entityName": "Case",
+                                "showOnCreate": true,
+                                "saveToTranscript": "Case",
+                                "entityFieldMaps": [
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "CCR_LastName__c",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Last Name"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "SuppliedName",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Last Name"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "CCR_Email__c",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Email"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "SuppliedEmail",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Email"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Status",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Status"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Origin",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Case Origin"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "CCR_ContactType__c",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "CCR_ContactType__c"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "RecordTypeId",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "CaseType"
+                                    },
+                                    {
+                                        "isExactMatch": false,
+                                        "fieldName": "Subject",
+                                        "doCreate": true,
+                                        "doFind": false,
+                                        "label": "Subject"
+                                    }
+                                ]
+                            }
+                        ];
+                }
+
+                embedded_svc.liveAgentAPI.startChat({
+                    directToAgentRouting: {
+                        buttonId: "5731m0000008OO5",
+                        fallback: true
+                    },
+                    extraPrechatInfo: extraPrechatInfo,
+                    extraPrechatFormDetails: extraPrechatFormDetails,
+                    prepopulatedPrechatFields: {
+                        FirstName: document.getElementById('lastName').value,
+                        LastName: document.getElementById('lastName').value,
+                        Email: document.getElementById('email').value,
+                        Subject: document.getElementById('subject').value
+                    }
+                });
+
+                console.log(extraPrechatInfo);
+                console.log(extraPrechatFormDetails);
+            };
+        })();
+    </script>
+
+    </body>
+
+</html>
